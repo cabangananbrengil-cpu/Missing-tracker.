@@ -1,0 +1,258 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Missing Tracker Dashboard</title>
+  <meta name="description" content="Search, track, and monitor expanding historical database logs for missing entities. Managed via GitHub.">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f8f9fa;}
+    .container { max-width: 1100px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);}
+    h2 { color: #333; margin-top: 20px; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+    
+    /* Clean Vertical Form Layout: Inputs sit directly below their labels */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #495057;
+      font-size: 14px;
+    }
+    form input, form select, form textarea { 
+      padding: 10px; 
+      border: 1px solid #ccc; 
+      border-radius: 4px; 
+      font-size: 14px;
+      font-family: inherit;
+    }
+    form button { 
+      width: 100%;
+      padding: 12px; 
+      background-color: #007bff; 
+      color: white; 
+      border: none; 
+      border-radius: 4px;
+      cursor: pointer; 
+      font-weight: bold; 
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    form button:hover { background-color: #0056b3;}
+    
+    /* Search Bar Layout */
+    .search-container { margin: 25px 0 15px 0; }
+    .search-container input { width: 100%; padding: 12px; font-size: 15px; border: 2px solid #007bff; border-radius: 4px; box-sizing: border-box; }
+    
+    /* Table Styling rearranged according to your specific columns */
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
+    th { background-color: #007bff; color: white; }
+    tr:nth-child(even) { background-color: #f2f2f2; }
+    .no-results { text-align: center; color: #777; font-style: italic; }
+    
+    .revision-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-weight: bold;
+      border-radius: 10px;
+      background-color: #6c757d;
+      color: white;
+      margin-left: 5px;
+    }
+    .initial-badge { background-color: #28a745; }
+    .update-badge { background-color: #dc3545; }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <h2>Add or Update Missing Record</h2>
+    <form id="recordForm">
+      <div class="form-group">
+        <label for="recordId">Record Tracking ID</label>
+        <input type="text" id="recordId" placeholder="e.g., REC001" required>
+      </div>
+
+      <div class="form-group">
+        Category / Type</label>
+        
+          <option value="" disabled selected>-- Select Type --</option>
+          <option value="Person">Person</option>
+          <option value="Item/Asset">Item/Asset</option>
+          <option value="Location">Location</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Enter name details" required>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Current or Last Known Location</label>
+        <input type="text" id="location" placeholder="Enter location parameters" required>
+      </div>
+
+      <div class="form-group">
+        <label for="datetime">Logged Date & Time</label>
+        <input type="datetime-local" id="datetime" required>
+      </div>
+
+      <div class="form-group">
+        <label for="extraDetail">Extra Details</label>
+        <input type="text" id="extraDetail" placeholder="Physical features, age, serial numbers, changes, etc.">
+      </div>
+
+      <button type="submit" id="submitBtn">Log Record Entry</button>
+    </form>
+      
+    <h2>Tracked Record Timeline Database</h2>
+    
+    <div class="search-container">
+      <input type="text" id="searchEngine" placeholder="🔍 Search logs instantly by ID, Name, Type, Location, or Extra Details...">
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID & Version</th>
+          <th>Type</th>
+          <th>Name</th>
+          <th>Location</th>
+          <th>Date & Time</th>
+          <th>Extra Details</th>
+        </tr>
+      </thead>
+      <tbody id="recordTableBody">
+        <!-- Managed dynamically via JavaScript -->
+      </tbody>
+    </table>
+  </div>
+
+<script>
+/**
+ * OOP: Structural Record Entry Model
+ */
+class MissingRecord {
+  constructor(id, entityType, name, location, datetime, extraDetail, revisionNum = 1) {
+    this.id = id.trim().toUpperCase();
+    this.entityType = entityType;
+    this.name = name.trim();
+    this.location = location.trim();
+    this.datetime = datetime.replace('T', ' ');
+    this.extraDetail = extraDetail.trim() || 'N/A';
+    this.revisionNum = revisionNum;
+  }
+}
+
+/**
+ * DSA & OOP: Historical Map Engine (No seed data, starts clean!)
+ */
+class HistoricalRecordDatabase {
+  constructor() {
+    this.storageKey = 'missing_tracker_clean_v2';
+    this.recordsMap = this.loadFromStorage();
+  }
+
+  loadFromStorage() {
+    const data = localStorage.getItem(this.storageKey);
+    return data ? JSON.parse(data) : {};
+  }
+
+  persist() {
+    localStorage.setItem(this.storageKey, JSON.stringify(this.recordsMap));
+  }
+
+  save(record) {
+    if (!this.recordsMap[record.id]) {
+      this.recordsMap[record.id] = [];
+    }
+    
+    record.revisionNum = this.recordsMap[record.id].length + 1;
+    this.recordsMap[record.id].push(record);
+    this.persist();
+  }
+
+  search(query) {
+    const lowerQuery = query.toLowerCase().trim();
+    const allHistoricalRows = Object.values(this.recordsMap).flat();
+    
+    // Sort array globally by date descending (Newest updates appear first)
+    allHistoricalRows.sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
+
+    if (!lowerQuery) return allHistoricalRows;
+
+    return allHistoricalRows.filter(item => 
+      item.id.toLowerCase().includes(lowerQuery) ||
+      item.name.toLowerCase().includes(lowerQuery) ||
+      item.entityType.toLowerCase().includes(lowerQuery) ||
+      item.location.toLowerCase().includes(lowerQuery) ||
+      item.extraDetail.toLowerCase().includes(lowerQuery)
+    );
+  }
+}
+
+const DB = new HistoricalRecordDatabase();
+
+function renderTable(recordsList) {
+  const tbody = document.getElementById('recordTableBody');
+  tbody.innerHTML = '';
+
+  if (recordsList.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="no-results">No log histories found. Add your first record above!</td></tr>`;
+    return;
+  }
+
+  recordsList.forEach(item => {
+    const row = document.createElement('tr');
+    const badgeClass = item.revisionNum === 1 ? 'initial-badge' : 'update-badge';
+    const badgeText = item.revisionNum === 1 ? 'Initial' : `Update v${item.revisionNum}`;
+
+    row.innerHTML = `
+      <td>
+        <strong>${item.id}</strong> 
+        <span class="revision-badge ${badgeClass}">${badgeText}</span>
+      </td>
+      <td>${item.entityType}</td>
+      <td>${item.name}</td>
+      <td><strong>${item.location}</strong></td>
+      <td>${item.datetime}</td>
+      <td><em>${item.extraDetail}</em></td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+// Controller Listeners
+document.getElementById('recordForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const entry = new MissingRecord(
+    document.getElementById('recordId').value,
+    document.getElementById('entityType').value,
+    document.getElementById('name').value,
+    document.getElementById('location').value,
+    document.getElementById('datetime').value,
+    document.getElementById('extraDetail').value
+  );
+
+  DB.save(entry);
+  renderTable(DB.search(document.getElementById('searchEngine').value));
+  this.reset();
+});
+
+document.getElementById('searchEngine').addEventListener('input', function(e) {
+  renderTable(DB.search(e.target.value));
+});
+
+// Boot Initializer 
+renderTable(DB.search(''));
+</script>
+</body>
+</html>
