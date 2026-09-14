@@ -1,0 +1,226 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Missing Tracker Web App</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: #f4f6f9; color: #333; padding-bottom: 30px; }
+    
+    .app-header { background-color: #007bff; color: white; padding: 16px; text-align: center; font-size: 18px; font-weight: bold; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .container { width: 100%; max-width: 600px; margin: 0 auto; padding: 16px; }
+    
+    h2 { color: #333; margin: 20px 0 15px 0; border-bottom: 2px solid #007bff; padding-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px;}
+    
+    /* Stanza Blocks optimized for Mobile Finger-Tapping */
+    .stanza-group { margin-bottom: 20px; }
+    .stanza-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #495057; font-size: 14px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .stanza-group input, .stanza-group select { display: block; width: 100%; padding: 14px; border: 1px solid #ced4da; border-radius: 8px; font-size: 16px; background-color: #fff; width: 100%; }
+    .stanza-group input:focus, .stanza-group select:focus { border-color: #007bff; outline: none; box-shadow: 0 0 0 3px rgba(0,123,255,0.15); }
+    
+    /* Native Feeling Buttons */
+    .btn-block { width: 100%; padding: 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 10px; transition: background 0.2s; text-align: center; display: block; }
+    .btn-primary { background-color: #007bff; color: white; }
+    .btn-primary:active { background-color: #004ba0; }
+    .btn-secondary { background-color: #6c757d; color: white; margin-top: 15px; font-size: 14px; padding: 12px; }
+    .btn-secondary:active { background-color: #495057; }
+    
+    /* Mobile Search Bar Component */
+    .search-container { margin: 15px 0; }
+    .search-container input { width: 100%; padding: 14px; font-size: 16px; border: 2px solid #007bff; border-radius: 8px; }
+    
+    /* Mobile Card-Table Architecture */
+    table { width: 100%; border-collapse: collapse; }
+    thead { display: none; }
+    tr { display: block; background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e9ecef; }
+    td { display: block; padding: 6px 0; font-size: 15px; border: none; text-align: left; word-break: break-word; }
+    
+    td::before { content: attr(data-label); font-weight: bold; color: #6c757d; display: inline-block; width: 120px; font-size: 13px; text-transform: uppercase; }
+    td.no-results { text-align: center; color: #777; font-style: italic; padding: 20px 0; }
+    td.no-results::before { display: none; }
+
+    .revision-badge { display: inline-block; padding: 2px 8px; font-size: 11px; font-weight: bold; border-radius: 10px; color: white; margin-left: 6px; }
+    .initial-badge { background-color: #28a745; }
+    .update-badge { background-color: #dc3545; }
+  </style>
+</head>
+<body>
+
+  <div class="app-header">Missing Tracker Database</div>
+  
+  <div class="container">
+    
+    <!-- SECTION 1: DATA LOGGING STANZA FORM -->
+    <h2>Add / Update Entry</h2>
+    <form id="recordForm" autocomplete="off">
+      <div class="stanza-group">
+        <label for="recordId">Tracking Identifier (ID)</label>
+        <input type="text" id="recordId" placeholder="e.g., REC001" required>
+      </div>
+      <div class="stanza-group">
+        Record Category Classification</label>
+        
+          <option value="" disabled selected>-- Select Classification --</option>
+          <option value="Person">Person (Individual Profile Logs)</option>
+          <option value="Item/Asset">Item/Asset (Cargo, Devices, Hardware)</option>
+          <option value="Location">Location (Area Parameters, Zones)</option>
+          <option value="Other">Other (Unclassified System Entities)</option>
+        </select>
+      </div>
+      <div class="stanza-group">
+        <label for="name">Subject Identity Name</label>
+        <input type="text" id="name" placeholder="Enter target profile name" required>
+      </div>
+      <div class="stanza-group">
+        <label for="location">Current / Last Known Location</label>
+        <input type="text" id="location" placeholder="Enter geographic descriptors" required>
+      </div>
+      <div class="stanza-group">
+        <label for="datetime">Official Timestamp Log Record</label>
+        <input type="datetime-local" id="datetime" required>
+      </div>
+      <div class="stanza-group">
+        <label for="extraDetail">Supplemental Structural Descriptions</label>
+        <input type="text" id="extraDetail" placeholder="Physical marks, unique identifier traits...">
+      </div>
+      <button type="submit" class="btn-block btn-primary" id="submitBtn">Log Record Entry</button>
+    </form>
+    
+    <!-- SECTION 2: LIVE DATALIST TIMELINE DISPLAY -->
+    <h2>Tracked Database Timeline</h2>
+    <div class="search-container">
+      <input type="text" id="searchEngine" placeholder="🔍 Instant dynamic database filter...">
+    </div>
+    
+    <table>
+      <tbody id="recordTableBody">
+        <!-- Managed dynamically via JavaScript -->
+      </tbody>
+    </table>
+
+    <!-- Utility Option to copy raw data block across to Code Studio -->
+    <button class="btn-block btn-secondary" onclick="exportDatabaseData()">Copy Data for Code Studio Backup</button>
+
+  </div>
+
+<script>
+class MissingRecord {
+  constructor(id, entityType, name, location, datetime, extraDetail, revisionNum = 1) {
+    this.id = id.trim().toUpperCase();
+    this.entityType = entityType;
+    this.name = name.trim();
+    this.location = location.trim();
+    this.datetime = datetime.replace('T', ' ');
+    this.extraDetail = extraDetail.trim() || 'N/A';
+    this.revisionNum = revisionNum;
+  }
+}
+
+class HistoricalRecordDatabase {
+  constructor() {
+    this.storageKey = 'missing_tracker_unified_v6';
+    this.recordsMap = this.loadFromStorage();
+  }
+  loadFromStorage() {
+    const data = localStorage.getItem(this.storageKey);
+    return data ? JSON.parse(data) : {};
+  }
+  persist() {
+    localStorage.setItem(this.storageKey, JSON.stringify(this.recordsMap));
+  }
+  save(record) {
+    if (!this.recordsMap[record.id]) this.recordsMap[record.id] = [];
+    record.revisionNum = this.recordsMap[record.id].length + 1;
+    this.recordsMap[record.id].push(record);
+    this.persist();
+  }
+  search(query) {
+    const lowerQuery = query.toLowerCase().trim();
+    const allHistoricalRows = Object.values(this.recordsMap).flat();
+    allHistoricalRows.sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
+    if (!lowerQuery) return allHistoricalRows;
+    return allHistoricalRows.filter(item => 
+      item.id.toLowerCase().includes(lowerQuery) || item.name.toLowerCase().includes(lowerQuery) ||
+      item.entityType.toLowerCase().includes(lowerQuery) || item.location.toLowerCase().includes(lowerQuery) ||
+      item.extraDetail.toLowerCase().includes(lowerQuery)
+    );
+  }
+}
+
+const DB = new HistoricalRecordDatabase();
+
+function renderTable(recordsList) {
+  const tbody = document.getElementById('recordTableBody');
+  tbody.innerHTML = '';
+
+  if (recordsList.length === 0) {
+    tbody.innerHTML = `<tr><td class="no-results">No logs found. Add your first record above!</td></tr>`;
+    return;
+  }
+
+  recordsList.forEach(item => {
+    const row = document.createElement('tr');
+    const badgeClass = item.revisionNum === 1 ? 'initial-badge' : 'update-badge';
+    const badgeText = item.revisionNum === 1 ? 'Initial' : `Update v${item.revisionNum}`;
+
+    row.innerHTML = `
+      <td data-label="ID & Version"><b>${item.id}</b><span class="revision-badge ${badgeClass}">${badgeText}</span></td>
+      <td data-label="Category">${item.entityType}</td>
+      ${item.name}</td>
+      <td data-label="Location"><b>${item.location}</b></td>
+      <td data-label="Timestamp">${item.datetime}</td>
+      <td data-label="Description"><i>${item.extraDetail}</i></td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+document.getElementById('recordForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  // Mobile fix: Force phone software keyboard to drop down out of view area
+  document.activeElement?.blur();
+
+  const entry = new MissingRecord(
+    document.getElementById('recordId').value,
+    document.getElementById('entityType').value,
+    document.getElementById('name').value,
+    document.getElementById('location').value,
+    document.getElementById('datetime').value,
+    document.getElementById('extraDetail').value
+  );
+
+  DB.save(entry);
+  
+  // Visual validation notice for touchscreens
+  if (navigator.vibrate) navigator.vibrate(50);
+  alert(`Record ${entry.id} saved successfully!`);
+
+  renderTable(DB.search(document.getElementById('searchEngine').value));
+  this.reset();
+});
+
+document.getElementById('searchEngine').addEventListener('input', function(e) {
+  renderTable(DB.search(e.target.value));
+});
+
+// Utility to safely export data string from phone back into computer code systems
+function exportDatabaseData() {
+  const dataString = localStorage.getItem(DB.storageKey);
+  if (!dataString || dataString === '{}') {
+    alert("Database is currently empty!");
+    return;
+  }
+  navigator.clipboard.writeText(dataString).then(() => {
+    alert("Database copied to clipboard! You can now paste this data string inside Code Studio.");
+  }).catch(() => {
+    alert("Please copy this text manually: " + dataString);
+  });
+}
+
+renderTable(DB.search(''));
+</script>
+</body>
+</html>
+
