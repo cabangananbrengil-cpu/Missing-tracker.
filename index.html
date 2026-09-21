@@ -1,916 +1,1182 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"> 
-<meta name="google-site-verification" 
- content="p6cdjFvstnfGgcKZ_m7X-05Y3CStDKBe4FmC0zXdmbA" />
-<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<meta charset="UTF-8">
+
+<meta name="google-site-verification"
+      content="p6cdjFvstnfGgcKZ_m7X-05Y3CStDKBe4FmC0zXdmbA">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<meta name="description"
+      content="Missing Tracker Database">
+
 <title>Missing Tracker Database</title>
 
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;font-family:Arial,sans-serif;
- background:#f3f5f8;color:#222
-}
-header{
- background:#087ff5;color:white;
- text-align:center;padding:20px
-}
-main{width:95%;max-width:1400px;margin:20px auto}
-.panel{
- background:white;padding:20px;margin-bottom:20px;
- border-radius:12px;
- box-shadow:0 2px 10px #ddd
-}
-h2{margin-top:0}
-.grid{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:15px
-}
-.field{display:flex;flex-direction:column}
-.full{grid-column:1/-1}
-label{font-weight:bold;margin-bottom:6px}
-input,select,textarea{
- width:100%;padding:12px;
- border:1px solid #bbb;
- border-radius:8px;
- font-size:16px
-}
-textarea{min-height:100px}
-.actions{
- display:flex;gap:10px;
- flex-wrap:wrap;margin-top:15px
-}
-button{
- border:0;border-radius:8px;
- padding:12px 18px;
- font-weight:bold;
- cursor:pointer
-}
-.primary{background:#087ff5;color:white}
-.success{background:#198754;color:white}
-.danger{background:#dc3545;color:white}
-.secondary{background:#6c757d;color:white}
-.search{
- width:100%;
- border:2px solid #087ff5
-}
-.info{
- display:flex;
- justify-content:space-between;
- flex-wrap:wrap;
- gap:10px;margin:15px 0
-}
-.status{
- background:#e8f4ff;
- color:#075cae;
- padding:8px 12px;
- border-radius:20px;
- font-weight:bold
-}
-.table-wrap{overflow-x:auto}
-table{
- width:100%;
- min-width:1000px;
- border-collapse:collapse
-}
-th,td{
- padding:10px;
- border-bottom:1px solid #ddd;
- text-align:left;
- vertical-align:top
-}
-th{
- background:#17202a;
- color:white;
- white-space:nowrap
-}
-tr:nth-child(even){background:#f8f9fa}
-.badge{
- padding:5px 8px;
- border-radius:5px;
- font-size:11px;
- font-weight:bold;
- white-space:nowrap
-}
-.new{background:#d9edf7;color:#075b83}
-.updated{background:#fff3cd;color:#765b00}
-.empty{text-align:center;padding:30px;color:#777}
-.small{padding:7px 10px;font-size:12px}
 
-@media(max-width:700px){
- .grid{grid-template-columns:1fr}
- .full{grid-column:auto}
- main{width:96%}
- .panel{padding:15px}
+* {
+    box-sizing: border-box;
 }
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #eef1f4;
+    color: #252a2e;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    background: #263746;
+    color: #ffffff;
+    padding: 22px 15px;
+    text-align: center;
+    border-bottom: 4px solid #1b2833;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+header p {
+    margin: 7px 0 0;
+    font-size: 14px;
+    color: #cbd3d9;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+    width: 95%;
+    max-width: 1400px;
+    margin: 25px auto;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card {
+    background: #ffffff;
+    border: 1px solid #d7dce0;
+    border-radius: 8px;
+    padding: 22px;
+    margin-bottom: 22px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.06);
+}
+
+.card h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #34495e;
+    font-size: 21px;
+    font-weight: 600;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 17px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.field.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    margin-bottom: 7px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #3c454d;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #bfc6cc;
+    border-radius: 5px;
+    background: #ffffff;
+    color: #252a2e;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #536878;
+    box-shadow: 0 0 0 2px rgba(83, 104, 120, 0.12);
+}
+
+textarea {
+    min-height: 105px;
+    resize: vertical;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+
+button {
+    border: none;
+    border-radius: 5px;
+    padding: 11px 17px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.88;
+}
+
+.primary {
+    background: #34495e;
+    color: #ffffff;
+}
+
+.secondary {
+    background: #6b737a;
+    color: #ffffff;
+}
+
+/* =========================
+   EDIT / DELETE
+========================= */
+
+.action-button {
+    width: 72px;
+    height: 36px;
+    padding: 0;
+    margin: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.action-button.edit {
+    background: #465b6c;
+    color: #ffffff;
+}
+
+.action-button.delete {
+    background: #7f3b3b;
+    color: #ffffff;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+    margin-top: 17px;
+    padding: 12px 14px;
+    border-radius: 5px;
+    background: #edf2f5;
+    color: #44515c;
+    border: 1px solid #d5dce1;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.status.success {
+    background: #e6eee9;
+    color: #315542;
+    border-color: #c8d9ce;
+}
+
+.status.error {
+    background: #f1e5e5;
+    color: #713b3b;
+    border-color: #decaca;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-box {
+    margin-bottom: 14px;
+}
+
+.search-box input {
+    font-size: 15px;
+}
+
+/* =========================
+   RECORD COUNT
+========================= */
+
+#recordCount {
+    color: #626b72;
+    font-size: 14px;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #d5dade;
+    border-radius: 5px;
+}
+
+table {
+    width: 100%;
+    min-width: 1050px;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border-bottom: 1px solid #d9dee2;
+    padding: 11px;
+    text-align: left;
+    vertical-align: top;
+    font-size: 14px;
+}
+
+th {
+    background: #34495e;
+    color: #ffffff;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+tbody tr:nth-child(even) {
+    background: #f7f8f9;
+}
+
+tbody tr:hover {
+    background: #edf1f3;
+}
+
+.empty {
+    text-align: center;
+    padding: 35px;
+    color: #727a80;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    main {
+        width: 97%;
+        margin: 15px auto;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .field.full {
+        grid-column: auto;
+    }
+
+    header h1 {
+        font-size: 23px;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .buttons button {
+        width: 100%;
+    }
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
 <header>
-<h1>Missing Tracker Database</h1>
+
+    <h1>Missing Tracker Database</h1>
+
+    <p>
+        Shared Online Record System
+    </p>
+
 </header>
+
 
 <main>
 
-<section class="panel">
+<!-- =====================================================
+     LOG RECORD ENTRY
+===================================================== -->
 
-<h2 id="title">Log Record Entry</h2>
+<div class="card">
 
-<div class="grid">
+    <h2>Log Record Entry</h2>
 
-<div class="field">
-<label>Record ID</label>
-<input id="recordId" placeholder="Example: MT-001">
+    <form id="recordForm">
+
+        <div class="form-grid">
+
+            <!-- RECORD ID -->
+
+            <div class="field">
+
+                <label for="recordId">
+                    Record ID
+                </label>
+
+                <input
+                    type="text"
+                    id="recordId"
+                    placeholder="Example: MT-001"
+                    required>
+
+            </div>
+
+
+            <!-- CATEGORY -->
+
+            <div class="field">
+
+                <label for="category">
+                    Category
+                </label>
+
+                <select
+                    id="category"
+                    required>
+
+                    <option value="">
+                        Select category
+                    </option>
+
+                    <option value="Missing Person">
+                        Missing Person
+                    </option>
+
+                    <option value="Missing Animal">
+                        Missing Animal
+                    </option>
+
+                    <option value="Missing Item">
+                        Missing Item
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- NAME -->
+
+            <div class="field">
+
+                <label for="name">
+                    Name / Description
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Enter name or description"
+                    required>
+
+            </div>
+
+
+            <!-- LOCATION -->
+
+            <div class="field">
+
+                <label for="location">
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    id="location"
+                    placeholder="Enter location"
+                    required>
+
+            </div>
+
+
+            <!-- TIMESTAMP -->
+
+            <div class="field">
+
+                <label for="timestamp">
+                    Official Timestamp
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="timestamp"
+                    required>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="field">
+
+                <label for="status">
+                    Status
+                </label>
+
+                <select id="status">
+
+                    <option value="Active">
+                        Active
+                    </option>
+
+                    <option value="Found">
+                        Found
+                    </option>
+
+                    <option value="Closed">
+                        Closed
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- DETAILS -->
+
+            <div class="field full">
+
+                <label for="details">
+                    Supplemental Structural Descriptions
+                </label>
+
+                <textarea
+                    id="details"
+                    placeholder="Enter additional details..."></textarea>
+
+            </div>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <button
+                type="submit"
+                class="primary">
+
+                Log Record Entry
+
+            </button>
+
+
+            <button
+                type="button"
+                class="secondary"
+                id="cancelButton">
+
+                Cancel Edit
+
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <div
+        id="statusMessage"
+        class="status">
+
+        Connecting to shared database...
+
+    </div>
+
 </div>
 
-<div class="field">
-<label>Category</label>
-<select id="category">
-<option value="">-- Select Category --</option>
-<option>Person</option>
-<option>Item / Asset</option>
-<option>Location</option>
-<option>Other</option>
-</select>
-</div>
 
-<div class="field">
-<label>Name / Description</label>
-<input id="name" placeholder="Enter name or description">
-</div>
+<!-- =====================================================
+     DATABASE TABLE
+===================================================== -->
 
-<div class="field">
-<label>Location</label>
-<input id="location" placeholder="Enter location">
-</div>
+<div class="card">
 
-<div class="field">
-<label>Official Timestamp</label>
-<input id="datetime" type="datetime-local">
-</div>
-
-<div class="field full">
-<label>Supplemental Structural Descriptions</label>
-<textarea id="details" placeholder="Enter additional details..."></textarea>
-</div>
-
-</div>
-
-<div class="actions">
-
-<button
-type="button"
-class="primary"
-onclick="saveRecord()">
-Log Record Entry
-</button>
-
-<button
-type="button"
-class="secondary"
-id="cancel"
-onclick="cancelEdit()"
-style="display:none">
-Cancel Edit
-</button>
-
-<button
-type="button"
-class="success"
-onclick="backup()">
-Copy Database Backup
-</button>
-
-</div>
-
-</section>
+    <h2>Tracked Database Timeline</h2>
 
 
-<section class="panel">
+    <div class="search-box">
 
-<h2>Tracked Database Timeline</h2>
+        <input
+            type="search"
+            id="searchInput"
+            placeholder="Search database...">
 
-<input
-id="search"
-class="search"
-placeholder="🔎 Search database..."
-oninput="render()">
-
-<div class="info">
-
-<strong id="count">
-Database contains 0 records.
-</strong>
-
-<span
-id="status"
-class="status">
-DATABASE READY
-</span>
-
-</div>
+    </div>
 
 
-<div class="table-wrap">
+    <div id="recordCount">
+        Database contains 0 records.
+    </div>
 
-<table>
 
-<thead>
+    <br>
 
-<tr>
-<th>Record ID</th>
-<th>Category</th>
-<th>Name / Description</th>
-<th>Location</th>
-<th>Timestamp</th>
-<th>Details</th>
-<th>Status</th>
-<th>Version</th>
-<th>Last Updated</th>
-<th>Actions</th>
-</tr>
 
-</thead>
+    <div class="table-container">
 
-<tbody id="table"></tbody>
+        <table>
 
-</table>
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Record ID
+                    </th>
+
+                    <th>
+                        Category
+                    </th>
+
+                    <th>
+                        Name / Description
+                    </th>
+
+                    <th>
+                        Location
+                    </th>
+
+                    <th>
+                        Timestamp
+                    </th>
+
+                    <th>
+                        Details
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Last Updated
+                    </th>
+
+                    <th>
+                        Actions
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="recordTableBody">
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        class="empty">
+
+                        Loading records...
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>
-
-</section>
 
 </main>
 
 
-<script>
+<!-- =====================================================
+     FIREBASE
+===================================================== -->
 
-/* =========================================
-   OOP RECORD CLASS
-   ========================================= */
+<script type="module">
 
-class MissingRecord{
-
- constructor(id,category,name,location,time,details){
-
-  this.id=id;
-  this.category=category;
-  this.name=name;
-  this.location=location;
-  this.time=time;
-  this.details=details;
-
-  this.version=1;
-
-  this.createdAt=new Date().toISOString();
-  this.updatedAt=this.createdAt;
- }
-
- update(category,name,location,time,details){
-
-  this.category=category;
-  this.name=name;
-  this.location=location;
-  this.time=time;
-  this.details=details;
-
-  this.version++;
-
-  this.updatedAt=new Date().toISOString();
- }
+import {
+    initializeApp
 }
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 
 
-/* =========================================
-   OOP DATABASE CLASS
-   ========================================= */
-
-class Database{
-
- constructor(){
-
-  this.key="missing_tracker_js_database";
-  this.records=[];
-
-  this.load();
- }
-
- load(){
-
-  try{
-
-   let data=localStorage.getItem(this.key);
-
-   if(data){
-
-    let saved=JSON.parse(data);
-
-    this.records=saved.map(x=>{
-
-     let r=new MissingRecord(
-      x.id,
-      x.category,
-      x.name,
-      x.location,
-      x.time,
-      x.details
-     );
-
-     r.version=x.version||1;
-     r.createdAt=x.createdAt;
-     r.updatedAt=x.updatedAt;
-
-     return r;
-    });
-   }
-
-  }catch(e){
-
-   console.log("Storage unavailable.");
-
-  }
- }
-
- save(){
-
-  try{
-
-   localStorage.setItem(
-    this.key,
-    JSON.stringify(this.records)
-   );
-
-  }catch(e){
-
-   console.log("Could not use localStorage.");
-
-  }
- }
-
- find(id){
-
-  return this.records.find(
-   r=>r.id===id
-  );
- }
-
- add(record){
-
-  if(this.find(record.id))
-   return false;
-
-  this.records.push(record);
-  this.save();
-
-  return true;
- }
-
- update(id,data){
-
-  let r=this.find(id);
-
-  if(!r)return false;
-
-  r.update(
-   data.category,
-   data.name,
-   data.location,
-   data.time,
-   data.details
-  );
-
-  this.save();
-
-  return true;
- }
-
- remove(id){
-
-  let old=this.records.length;
-
-  this.records=this.records.filter(
-   r=>r.id!==id
-  );
-
-  this.save();
-
-  return old!==this.records.length;
- }
-
- search(text){
-
-  text=text.toLowerCase().trim();
-
-  if(!text)return this.records;
-
-  return this.records.filter(r=>
-
-   r.id.toLowerCase().includes(text)||
-   r.category.toLowerCase().includes(text)||
-   r.name.toLowerCase().includes(text)||
-   r.location.toLowerCase().includes(text)||
-   r.details.toLowerCase().includes(text)
-
-  );
- }
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    updateDoc,
+    deleteDoc,
+    doc,
+    serverTimestamp
 }
+from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 
-/* =========================================
-   CREATE JAVASCRIPT DATABASE
-   ========================================= */
+/*
+===========================================================
+FIREBASE CONFIGURATION
 
-const db=new Database();
+REPLACE THE VALUES BELOW WITH YOUR FIREBASE CONFIG.
 
-let editing=null;
+DO NOT DELETE THE STRUCTURE.
 
+Example:
 
-/* =========================================
-   GET ELEMENT
-   ========================================= */
+const firebaseConfig = {
+    apiKey: "AIza...",
+    authDomain: "your-project.firebaseapp.com",
+    projectId: "your-project",
+    storageBucket: "your-project.firebasestorage.app",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:abcdef"
+};
 
-const $=id=>document.getElementById(id);
+===========================================================
+*/
 
+const firebaseConfig = {
 
-/* =========================================
-   SAVE / LOG RECORD
-   ========================================= */
+    apiKey:
+        "PASTE_YOUR_API_KEY_HERE",
 
-function saveRecord(){
+    authDomain:
+        "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
 
- let id=$("recordId").value.trim().toUpperCase();
- let category=$("category").value;
- let name=$("name").value.trim();
- let location=$("location").value.trim();
- let time=$("datetime").value;
- let details=$("details").value.trim();
+    projectId:
+        "PASTE_YOUR_PROJECT_ID_HERE",
 
+    storageBucket:
+        "PASTE_YOUR_STORAGE_BUCKET_HERE",
 
- /* VALIDATION */
+    messagingSenderId:
+        "PASTE_YOUR_MESSAGING_SENDER_ID_HERE",
 
- if(!id){
-  alert("Please enter a Record ID.");
-  return;
- }
+    appId:
+        "PASTE_YOUR_APP_ID_HERE"
 
- if(!category){
-  alert("Please select a Category.");
-  return;
- }
+};
 
- if(!name){
-  alert("Please enter a Name / Description.");
-  return;
- }
 
- if(!time){
-  alert("Please select a Timestamp.");
-  return;
- }
+/* ========================================================
+   FIREBASE INITIALIZATION
+======================================================== */
 
+let app = null;
+let db = null;
 
- let data={
-  category,
-  name,
-  location,
-  time,
-  details
- };
 
+try {
 
- /* =====================================
-    UPDATE EXISTING RECORD
-    ===================================== */
-
- if(editing){
-
-  if(db.update(editing,data)){
-
-   $("status").textContent=
-    "DATABASE UPDATED — "+editing;
-
-   editing=null;
-
-   clearForm();
-
-   $("title").textContent=
-    "Log Record Entry";
-
-   $("cancel").style.display=
-    "none";
-
-   $("recordId").disabled=false;
-
-   $("status").textContent=
-    "DATABASE UPDATED";
-
-   render();
-  }
-
-  return;
- }
-
-
- /* =====================================
-    CHECK DUPLICATE ID
-    ===================================== */
-
- if(db.find(id)){
-
-  if(confirm(
-   "Record "+id+
-   " already exists.\n\n"+
-   "Update this record?"
-  )){
-
-   editRecord(id);
-  }
-
-  return;
- }
-
-
- /* =====================================
-    ADD NEW RECORD
-    ===================================== */
-
- let record=new MissingRecord(
-  id,
-  category,
-  name,
-  location,
-  time,
-  details
- );
-
-
- if(db.add(record)){
-
-  clearForm();
-
-  $("status").textContent=
-   "NEW RECORD SAVED — "+id;
-
-  render();
-
- }
-
-}
-
-
-/* =========================================
-   EDIT RECORD
-   ========================================= */
-
-function editRecord(id){
-
- let r=db.find(id);
-
- if(!r)return;
-
- editing=id;
-
- $("recordId").value=r.id;
- $("category").value=r.category;
- $("name").value=r.name;
- $("location").value=r.location;
- $("datetime").value=r.time;
- $("details").value=r.details;
-
- $("recordId").disabled=true;
-
- $("title").textContent=
-  "Update Record: "+id;
-
- $("cancel").style.display=
-  "inline-block";
-
- $("status").textContent=
-  "EDITING "+id;
-
- window.scrollTo({
-  top:0,
-  behavior:"smooth"
- });
-
-}
-
-
-/* =========================================
-   CANCEL EDIT
-   ========================================= */
-
-function cancelEdit(){
-
- editing=null;
-
- clearForm();
-
- $("recordId").disabled=false;
-
- $("title").textContent=
-  "Log Record Entry";
-
- $("cancel").style.display=
-  "none";
-
- $("status").textContent=
-  "DATABASE READY";
-
-}
-
-
-/* =========================================
-   CLEAR FORM
-   ========================================= */
-
-function clearForm(){
-
- $("recordId").value="";
- $("category").value="";
- $("name").value="";
- $("location").value="";
- $("datetime").value="";
- $("details").value="";
-
-}
-
-
-/* =========================================
-   DELETE
-   ========================================= */
-
-function deleteRecord(id){
-
- if(!confirm(
-  "Delete record "+id+"?"
- ))return;
-
- if(db.remove(id)){
-
-  $("status").textContent=
-   "RECORD DELETED — "+id;
-
-  render();
- }
-
-}
-
-
-/* =========================================
-   FORMAT DATE
-   ========================================= */
-
-function dateText(value){
-
- if(!value)return "—";
-
- let d=new Date(value);
-
- if(isNaN(d))return value;
-
- return d.toLocaleString();
-
-}
-
-
-/* =========================================
-   RENDER REAL TABLE
-   ========================================= */
-
-function render(){
-
- let rows=db.search(
-  $("search").value
- );
-
- let table=$("table");
-
- table.innerHTML="";
-
-
- $("count").textContent=
-  "Database contains "+
-  rows.length+
-  " record(s).";
-
-
- /* NO RECORDS */
-
- if(rows.length===0){
-
-  let tr=document.createElement("tr");
-
-  let td=document.createElement("td");
-
-  td.colSpan=10;
-
-  td.className="empty";
-
-  td.textContent=
-   $("search").value
-   ?"No records match your search."
-   :"No logs found. Add your first record above!";
-
-  tr.appendChild(td);
-  table.appendChild(tr);
-
-  return;
- }
-
-
- /* CREATE TABLE ROWS */
-
- rows.forEach(r=>{
-
-  let tr=document.createElement("tr");
-
-
-  addCell(tr,r.id);
-  addCell(tr,r.category);
-  addCell(tr,r.name);
-  addCell(tr,r.location);
-  addCell(tr,dateText(r.time));
-  addCell(tr,r.details);
-
-
-  /* STATUS */
-
-  let status=document.createElement("td");
-
-  let badge=document.createElement("span");
-
-  badge.className=
-   "badge "+
-   (r.version>1?"updated":"new");
-
-  badge.textContent=
-   r.version>1
-   ?"DATABASE UPDATED"
-   :"NEW RECORD";
-
-  status.appendChild(badge);
-  tr.appendChild(status);
-
-
-  /* VERSION */
-
-  addCell(
-   tr,
-   r.version===1
-   ?"Initial"
-   :"Update v"+r.version
-  );
-
-
-  /* UPDATED */
-
-  addCell(
-   tr,
-   dateText(r.updatedAt)
-  );
-
-
-  /* ACTIONS */
-
-  let actions=document.createElement("td");
-
-
-  let edit=document.createElement("button");
-
-  edit.className=
-   "primary small";
-
-  edit.textContent="Edit";
-
-  edit.onclick=()=>{
-   editRecord(r.id);
-  };
-
-
-  let del=document.createElement("button");
-
-  del.className=
-   "danger small";
-
-  del.textContent="Delete";
-
-  del.onclick=()=>{
-   deleteRecord(r.id);
-  };
-
-
-  actions.appendChild(edit);
-  actions.appendChild(del);
-
-  tr.appendChild(actions);
-
-
-  table.appendChild(tr);
-
- });
-
-}
-
-
-/* =========================================
-   TABLE CELL
-   ========================================= */
-
-function addCell(row,value){
-
- let td=document.createElement("td");
-
- td.textContent=value||"—";
-
- row.appendChild(td);
-
-}
-
-
-/* =========================================
-   SEARCH
-   ========================================= */
-
-function searchDatabase(){
-
- render();
-
- $("status").textContent=
-  $("search").value.trim()
-  ?"SEARCHING DATABASE"
-  :"DATABASE READY";
-
-}
-
-
-/* =========================================
-   BACKUP
-   ========================================= */
-
-function backup(){
-
- if(db.records.length===0){
-
-  alert("Database is empty.");
-
-  return;
- }
-
-
- let text=JSON.stringify(
-  db.records,
-  null,
-  2
- );
-
-
- if(navigator.clipboard){
-
-  navigator.clipboard.writeText(text)
-   .then(()=>{
-
-    alert(
-     "Database backup copied."
+    app = initializeApp(
+        firebaseConfig
     );
 
-    $("status").textContent=
-     "BACKUP COPIED";
+    db = getFirestore(app);
 
-   })
-   .catch(()=>{
+}
 
-    prompt(
-     "Copy your database backup:",
-     text
-    );
+catch (error) {
 
-   });
-
- }else{
-
-  prompt(
-   "Copy your database backup:",
-   text
-  );
-
- }
+    console.error(error);
 
 }
 
 
-/* =========================================
-   START APPLICATION
-   ========================================= */
+/* ========================================================
+   VARIABLES
+======================================================== */
 
-render();
+let records = [];
 
-</script>
+let editingDocumentId = null;
 
-</body>
-  </html>
+
+/* ========================================================
+   ELEMENTS
+======================================================== */
+
+const form =
+    document.getElementById(
+        "recordForm"
+    );
+
+
+const recordTableBody =
+    document.getElementById(
+        "recordTableBody"
+    );
+
+
+const searchInput =
+    document.getElementById(
+        "searchInput"
+    );
+
+
+const recordCount =
+    document.getElementById(
+        "recordCount"
+    );
+
+
+const cancelButton =
+    document.getElementById(
+        "cancelButton"
+    );
+
+
+const statusMessage =
+    document.getElementById(
+        "statusMessage"
+    );
+
+
+/* ========================================================
+   STATUS
+======================================================== */
+
+function setStatus(
+    message,
+    type = "normal"
+) {
+
+    statusMessage.textContent =
+        message;
+
+
+    statusMessage.className =
+        "status";
+
+
+    if (type === "success") {
+
+        statusMessage.classList.add(
+            "success"
+        );
+
+    }
+
+
+    if (type === "error") {
+
+        statusMessage.classList.add(
+            "error"
+        );
+
+    }
+
+}
+
+
+/* ========================================================
+   LOAD RECORDS
+======================================================== */
+
+async function loadRecords() {
+
+    if (!db) {
+
+        setStatus(
+            "Firebase configuration is missing.",
+            "error"
+        );
+
+        recordTableBody.innerHTML = `
+            <tr>
+                <td colspan="9" class="empty">
+                    Firebase is not configured.
+                </td>
+            </tr>
+        `;
+
+        return;
+
+    }
+
+
+    try {
+
+        setStatus(
+            "Loading shared records..."
+        );
+
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "missingRecords"
+                )
+            );
+
+
+        records = [];
+
+
+        snapshot.forEach(
+            (documentSnapshot) => {
+
+                records.push({
+
+                    firestoreId:
+                        documentSnapshot.id,
+
+                    ...documentSnapshot.data()
+
+                });
+
+            }
+        );
+
+
+        renderRecords();
+
+
+        setStatus(
+            "Shared database ready.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+
+        setStatus(
+            "Could not load records: " +
+            error.message,
+            "error"
+        );
+
+
+        recordTableBody.innerHTML = `
+            <tr>
+                <td colspan="9" class="empty">
+                    Unable to load records.
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+
+
+/* ========================================================
+   ADD / UPDATE RECORD
+======================================================== */
+
+form.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        if (!db) {
+
+            alert(
+                "Firebase is not configured."
+            );
+
+            return;
+
+        }
+
+
+        const recordId =
+            document.getElementById(
+                "recordId"
+            ).value.trim();
+
+
+        const category =
+            document.getElementById(
+                "category"
+            ).value;
+
+
+        const name =
+            document.getElementById(
+                "name"
+            ).value.trim();
+
+
+        const location =
+            document.getElementById(
+                "location"
+            ).value.trim();
+
+
+        const timestamp =
+            document.getElementById(
+                "timestamp"
+            ).value;
+
+
+        const details =
+            document.getElementById(
+                "details"
+            ).value.trim();
+
+
+        const status =
+            document.getElementById(
+                "status"
+            ).value;
+
+
+        if (
+            !recordId ||
+            !category ||
+            !name ||
+            !location ||
+            !timestamp
+        ) {
+
+            alert(
+                "Please complete all required fields."
+            );
+
+            return;
+
+        }
+
+
+        const recordData = {
+
+            recordId:
+                recordId,
+
+            category:
+                category,
+
+            name:
+                name,
+
+            location:
+                location,
+
+            timestamp:
+                timestamp,
+
+            details:
+                details,
+
+            status:
+                status
+
+        };
+
+
+        try {
+
+            if (editingDocumentId) {
+
+                setStatus(
+                    "Updating record..."
+                );
+
+
+                const recordReference =
+                    doc(
+                        db,
+                        "missingRecords",
+                        editingDocumentId
+                    );
+
+
+                await updateDoc(
+                    recordReference,
+                    {
+                        ...recordData,
+
+                        lastUpdated:
+                            serverTimestamp()
+                    }
+                );
+
+
+                setStatus(
+                    "Record updated successfully.",
+                    "success"
+                );
+
+            }
+
+            else {
+
+                setStatus(
+                    "Saving record..."
+                );
+
+
+                await addDoc(
+                    collection(
+                        db,
+                        "missingRecords"
+                    ),
+                    {
+
+                        ...recordData,
+
+                        createdAt:
+                            serverTimestamp(),
+
+                        lastUpdated:
+                            serverTimestamp()
+
+                    }
+                );
+
+
+                setStatus(
+                    "Record saved to the shared database.",
+                    "success"
+                );
+
+            }
+
+
+            editingDocumentId =
+                null;
+
+
+            form.reset();
+
+
+            await loadRecords();
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+
+            setStatus(
+                "Error saving record: " +
+                error.message,
+                "error"
+            );
+
+        }
+
+    }
+);
+
+
+/* ========================================================
+   DISPLAY RECORDS
+======================================================== */
+
+function renderRecords() {
+
+    const search =
+        searchInput.value
+            .trim()
+            .toLowerCase();
+
+
+    const filteredRecords =
+        records.filter(
+            record => {
+
+                const searchableText = [
+
+                    record.recordId,
+                    record.category,
+                    record.name,
+                    record.location,
+                    record.timestamp,
+                    record.details,
+                    record.status
+
+                ]
+                .join(" ")
+                .toLowerCase();
+
+
+                return searchableText
+                    .includes(search);
+
+            }
+        );
+
+
+    recordCount.textContent =
+        "Database contains " +
+        records.length +
+        " records. Showing " +
+        filteredRecords.length +
+        ".";
+
+
+    if (
+        filteredRecords.length === 0
+    ) {
+
+        recordTableBody.innerHTML = `
+            <tr>
+                <td colspan="9" class="empty">
+           
